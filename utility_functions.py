@@ -6,8 +6,10 @@
 from datetime import datetime
 import logging
 import json
-import os
+import os, pandas as pd
 import pickle as pkl
+from wordcloud import WordCloud
+from textblob import TextBlob
 
 # Configuring the logger to record logs across the project
 def configure_logger():
@@ -56,3 +58,27 @@ def read_JSON(filename, foldername):
     with open(READ_PATH, "r") as f:
         data = json.load(f)
     return data
+
+# Generating word cloud for a given dataframe
+def generate_word_cloud(obj, column_name=None):
+    if type(obj)==pd.core.frame.DataFrame or column_name:
+        text = " ".join(obj[column_name].tolist())
+    else:
+        text = obj
+    word_cloud = WordCloud().generate(text)
+    return word_cloud
+
+# Mention type of record
+def get_label_type(obj):
+    label_type = "multi-label" if len(obj)>1 else "uni-label"
+    return label_type
+
+# Return the polarity of text
+def get_polarity(obj):
+    blob = TextBlob(obj)
+    return blob.sentiment.polarity
+
+# Return the sentiment of text
+def get_sentiment(obj):
+    sentiment = "positive" if obj>0 else "negative"
+    return sentiment
