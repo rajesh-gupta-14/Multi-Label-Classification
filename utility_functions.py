@@ -82,3 +82,7 @@ def get_polarity(obj):
 def get_sentiment(obj):
     sentiment = "positive" if obj>0 else "negative"
     return sentiment
+
+# Get all possible topics -> fn specific to Reuters
+def get_unique_values(df, column_name="bip:topics"):
+     return {each_value for each_row in df[column_name].values for each_value in each_row}
